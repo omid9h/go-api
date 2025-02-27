@@ -30,6 +30,7 @@ func (e endpoint) ListCatalogs(ctx context.Context, params ListCatalogsParams) (
 	return endpoints.Chain(
 		endpoints.RequestCounter[ListCatalogsParams, ListCatalogsResult](apiCounter, "ListCatalogs"),
 		endpoints.RequestDuration[ListCatalogsParams, ListCatalogsResult](apiDuration, "ListCatalogs"),
+		endpoints.OtelTracing[ListCatalogsParams, ListCatalogsResult]("goapi/internal/catalog/endpoint", "ListCatalogs"),
 	)(e.s.ListCatalogs)(ctx, params)
 }
 
