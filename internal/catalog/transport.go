@@ -7,10 +7,10 @@ import (
 )
 
 type transport struct {
-	endpoints Endpoint
+	endpoints Service
 }
 
-func NewTransport(endpoints Endpoint) *transport {
+func NewTransport(endpoints Service) *transport {
 	return &transport{
 		endpoints: endpoints,
 	}
