@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"goapi/internal/catalog"
+	"goapi/internal/report"
 	"goapi/pkg/tracing"
 
 	"github.com/labstack/echo/v4"
@@ -41,6 +42,11 @@ func run() error {
 	catalogEndpoint := catalog.NewEndpoint(catalogservice)
 	catalogTransport := catalog.NewTransport(catalogEndpoint)
 	catalogTransport.RegisterRoutes(e.Group("/api/v1/catalog"))
+
+	reportservice := report.NewService(catalogservice)
+	reportEndpoint := report.NewEndpoint(reportservice)
+	reportTransport := report.NewTransport(reportEndpoint)
+	reportTransport.RegisterRoutes(e.Group("/api/v1/report"))
 
 	e.Use(otelecho.Middleware("goapi-server"))
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
