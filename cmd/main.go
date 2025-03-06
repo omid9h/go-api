@@ -43,7 +43,7 @@ func run() error {
 	catalogTransport := catalog.NewTransport(catalogEndpoint)
 	catalogTransport.RegisterRoutes(e.Group("/api/v1/catalog"))
 
-	reportservice := report.NewService(catalogservice)
+	reportservice := report.NewService(catalogEndpoint)
 	reportEndpoint := report.NewEndpoint(reportservice)
 	reportTransport := report.NewTransport(reportEndpoint)
 	reportTransport.RegisterRoutes(e.Group("/api/v1/report"))
