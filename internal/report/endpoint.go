@@ -17,12 +17,6 @@ var apiCounter, _ = meter.Int64Counter(
 	metric.WithUnit("{call}"),
 )
 
-var apiDuration, _ = meter.Int64Histogram(
-	"api.duration",
-	metric.WithDescription("Duration of API calls."),
-	metric.WithUnit("{microseconds}"),
-)
-
 type endpoint struct {
 	s Service
 }
@@ -30,8 +24,6 @@ type endpoint struct {
 func (e endpoint) ReportCatalogs(ctx context.Context, params catalog.ListCatalogsParams) (catalog.ListCatalogsResult, error) {
 	return endpoints.Chain(
 		endpoints.RequestCounter[catalog.ListCatalogsParams, catalog.ListCatalogsResult](apiCounter, "ReportCatalogs"),
-		endpoints.RequestDuration[catalog.ListCatalogsParams, catalog.ListCatalogsResult](apiDuration, "ReportCatalogs"),
-		endpoints.OtelTracing[catalog.ListCatalogsParams, catalog.ListCatalogsResult]("goapi/internal/report/endpoint", "ReportCatalogs"),
 	)(e.s.ReportCatalogs)(ctx, params)
 }
 

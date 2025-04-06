@@ -13,6 +13,8 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"go.opentelemetry.io/contrib/instrumentation/github.com/labstack/echo/otelecho"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 var (
@@ -38,7 +40,12 @@ func run() error {
 	e.Debug = true
 	e.Logger.SetOutput(os.Stdout)
 
-	catalogservice := catalog.NewService()
+	db, err := gorm.Open(postgres.Open("<actual_dsn>"), &gorm.Config{})
+	if err != nil {
+		return err
+	}
+
+	catalogservice := catalog.NewService(db)
 	catalogEndpoint := catalog.NewEndpoint(catalogservice)
 	catalogTransport := catalog.NewTransport(catalogEndpoint)
 	catalogTransport.RegisterRoutes(e.Group("/api/v1/catalog"))

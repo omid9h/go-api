@@ -5,6 +5,8 @@ import (
 	"log/slog"
 
 	"goapi/pkg/logging"
+
+	"gorm.io/gorm"
 )
 
 type Service interface {
@@ -25,13 +27,18 @@ type Catalog struct {
 	Tags string
 }
 
-type service struct{}
+type service struct {
+	db *gorm.DB
+}
 
-func NewService() *service {
-	return &service{}
+func NewService(db *gorm.DB) *service {
+	return &service{db: db}
 }
 
 func (s *service) ListCatalogs(ctx context.Context, params ListCatalogsParams) (result ListCatalogsResult, err error) {
+	db := s.db.WithContext(ctx) // context aware gorm session
+
+	_ = db // use db to perform database operations in real example
 
 	logger := logging.FromContext(ctx)
 	logger.Info("Handling ListCatalogs request", slog.String("tag", params.Tag))
