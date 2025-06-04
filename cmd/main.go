@@ -61,6 +61,5 @@ func run() error {
 	}))
 	e.Use(middleware.Recover())
 
-	e.Start(fmt.Sprintf(":%d", 5001))
-	return nil
+	return e.Start(fmt.Sprintf(":%d", 5001))
 }
